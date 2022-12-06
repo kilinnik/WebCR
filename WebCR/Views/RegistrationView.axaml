@@ -1,0 +1,37 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:WebCR.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	    xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+		xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+		xmlns:material="using:Material.Icons.Avalonia"
+        mc:Ignorable="d"  d:DesignWidth="1100"  d:DesignHeight="700"
+        x:Class="WebCR.Views.RegistrationView">
+		<Panel>			
+			<Button Command="{Binding Back}" Background="DarkSalmon" HorizontalAlignment="Left" VerticalAlignment="Top" Width="160" Height="30">Назад</Button>
+			<Button Command="{Binding ChangeTheme}" Background="CornflowerBlue" HorizontalAlignment="Right" VerticalAlignment="Top">
+				<material:MaterialIcon Kind="ThemeLightDark"></material:MaterialIcon>
+			</Button>
+			<StackPanel MaxWidth="450" Width="450" Spacing="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<ProgressBar Margin="10" Opacity="{Binding VisibleLoad}" Classes="circular" IsIndeterminate="True" />
+				<controls:Card>
+					<TextBlock FontSize="20" HorizontalAlignment="Center" Classes="Headline6" Text="Регистрация" />
+				</controls:Card>
+				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Watermark="Фамилия" Text="{Binding Surname}" p1:TextFieldAssist.Label="{Binding LabelSurname}"/>
+				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Name}" Watermark="Имя" p1:TextFieldAssist.Label="{Binding LabelName}"/>
+				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Patronymic}" Watermark="Отчество" p1:TextFieldAssist.Label="{Binding LabelPatronymic}"/>
+				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Phone}" Watermark="Телефон" p1:TextFieldAssist.Label="{Binding LabelPhone}"/>
+				<DatePicker SelectedDate="{Binding DateOfBirth}" p1:TextFieldAssist.Label="{Binding LabelDateOfBirth}" />			
+				<WrapPanel>
+					<TextBlock VerticalAlignment="Center" FontSize="18" Width="60">Адрес:</TextBlock>
+					<ComboBox Classes="Outline" SelectedItem="{Binding SelectedStreet}" SelectedIndex="{Binding IndexCurStreet}" Items="{Binding Streets}" Width="240" p1:ComboBoxAssist.Label="{Binding LabelAdress}"/>
+					<TextBox Width="75" Text="{Binding House}" Watermark="Дом" />
+					<TextBox Width="75" Text="{Binding Flat}" Watermark="Квартира"/>
+				</WrapPanel>
+				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Login}" Watermark="Логин" p1:TextFieldAssist.Label="{Binding LabelLogin}"/>
+				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Password}" Classes="outline dense revealPasswordButton" PasswordChar="*" Watermark="Пароль" p1:TextFieldAssist.Label="{Binding LabelPassword}"/>			
+				<Button Command="{Binding Registration}">Зарегестрироваться</Button>
+			</StackPanel>
+		</Panel>
+</UserControl>

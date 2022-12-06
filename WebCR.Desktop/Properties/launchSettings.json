@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WebCR.Desktop": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:1768;http://localhost:1769"
+    }
+  }
+}
