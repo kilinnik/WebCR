@@ -101,8 +101,8 @@
 						<TextBlock Width="150">Расписание врачей</TextBlock>
 					</TabItem.Header>
 					<StackPanel>
-						<StackPanel>
-							<TextBox Text="{Binding SearchText}" BorderBrush="{Binding $self.Foreground}" BorderThickness="1" Classes="solo" Watermark="Введите имя врача или № кабинета" CornerRadius="32" Margin="8">
+						<StackPanel HorizontalAlignment="Left">
+							<TextBox Width="320" Text="{Binding SearchText}" BorderBrush="{Binding $self.Foreground}" BorderThickness="1" Classes="solo" Watermark="Введите имя врача или № кабинета" CornerRadius="32" Margin="8">
 								<TextBox.InnerLeftContent>
 									<Border Height="{Binding $parent[TextBox].Height}" Width="{Binding $self.Bounds.Height}">
 										<material:MaterialIcon HorizontalAlignment="Center" VerticalAlignment="Center" Kind="Magnify" Width="20" Height="20" />

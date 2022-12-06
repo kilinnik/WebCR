@@ -25,8 +25,8 @@
 					<WrapPanel>
 						<TextBlock VerticalAlignment="Center" FontSize="18" Width="60">Адрес:</TextBlock>
 						<ComboBox Classes="Outline" SelectedItem="{Binding SelectedStreet}" SelectedIndex="{Binding IndexCurStreet}" Items="{Binding Streets}" Width="240" p1:ComboBoxAssist.Label="{Binding TextAdress}"/>
-						<TextBox TextAlignment="Center" Width="75" Text="{Binding House}" Watermark="Дом" />
-						<TextBox TextAlignment="Center" Width="75" Text="{Binding Flat}" Watermark="Квартира"/>
+						<TextBox TextAlignment="Center" Width="73" Text="{Binding House}" Watermark="Дом" />
+						<TextBox TextAlignment="Center" Width="73" Text="{Binding Flat}" Watermark="Квартира"/>
 					</WrapPanel>
 					<Button Command="{Binding AddPatient}" HorizontalAlignment="Left" Width="150" Classes="Dark" Content="Добавить"/>
 					<controls:Card IsVisible="{Binding ShowSuccessAddPatient}" Width="200" Margin="10">

@@ -28,7 +28,7 @@
 					<TextBox Width="73" Text="{Binding House}" Watermark="Дом" />
 					<TextBox Width="73" Text="{Binding Flat}" Watermark="Квартира"/>
 				</WrapPanel>
-				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Login}" Watermark="Логин" p1:TextFieldAssist.Label="{Binding LabelLogin}"/>
+				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Login}" Classes="outline" Watermark="Логин" p1:TextFieldAssist.Label="{Binding LabelLogin}"/>
 				<TextBox UseFloatingWatermark="{Binding ShowFloatingWatermark}" Text="{Binding Password}" Classes="outline dense revealPasswordButton" PasswordChar="*" Watermark="Пароль" p1:TextFieldAssist.Label="{Binding LabelPassword}"/>			
 				<Button Command="{Binding Registration}">Зарегестрироваться</Button>
 			</StackPanel>
