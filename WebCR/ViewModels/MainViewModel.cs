@@ -11,6 +11,13 @@ public class MainViewModel : ViewModelBase
         private set => this.RaiseAndSetIfChanged(ref content, value);
     }
 
+    private int visibleLoad;
+    public int VisibleLoad
+    {
+        get => visibleLoad;
+        set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
+    }
+
     public void DbAdmin() //view админа бд
     {
         Content = new DbAdminViewModel(this);

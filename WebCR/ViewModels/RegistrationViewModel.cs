@@ -6,10 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Material.Styles.Themes;
 using Material.Styles.Themes.Base;
-using Newtonsoft.Json;
-using System.Net.Http;
 using WebCR.Models;
-using System.Text;
 
 namespace WebCR.ViewModels
 {
@@ -158,18 +155,11 @@ namespace WebCR.ViewModels
             private set => this.RaiseAndSetIfChanged(ref password, value);
         }
 
-        MainViewModel mw;
-        public MainViewModel MW
+        MainViewModel mv;
+        public MainViewModel MV
         {
-            get => mw;
-            private set => this.RaiseAndSetIfChanged(ref mw, value);
-        }
-
-        private int visibleLoad;
-        public int VisibleLoad
-        {
-            get => visibleLoad;
-            set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
+            get => mv;
+            private set => this.RaiseAndSetIfChanged(ref mv, value);
         }
 
         bool showFloatingWatermark;
@@ -191,7 +181,7 @@ namespace WebCR.ViewModels
 
         public async void Registration()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var dataLogins = await AsyncGetAll<DataLogin>("https://localhost:7242/api/Login/GetAll");
             LabelSurname = null; LabelName = null; LabelPatronymic = null; LabelPhone = null; LabelDateOfBirth = null; LabelAdress = null; LabelLogin = null; LabelPassword = null;
             if (Surname == null) LabelSurname = "Введите фамилию";
@@ -219,28 +209,30 @@ namespace WebCR.ViewModels
                 await AsyncAdd("https://localhost:7242/api/Patient/Add", patient);
                 DataLogin login = new(dataLogins.Last().Id + 1, Login, Password, "Пациент", patient.Id);
                 await AsyncAdd("https://localhost:7242/api/Login/Add", login);
-                MW.Patient(patient.Id);
+                MV.Patient(patient.Id);
             }
             else ShowFloatingWatermark = true;
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public RegistrationViewModel(MainViewModel mw)
         {
             isDark = MaterialThemeStyles.BaseTheme == BaseThemeMode.Dark;
-            LabelDateOfBirth = "Дата рождения"; MW = mw; LabelAdress = "Улица";
+            LabelDateOfBirth = "Дата рождения"; MV = mw; LabelAdress = "Улица"; 
             for (int i = 0; i < ListOfArea.Count; i++)
             {
                 for (int j = 0; j < ListOfArea[i].Count; j++)
                 {
                     Streets.Add(ListOfArea[i][j]);
                 }
-            }         
+            }
+            MV.VisibleLoad = 0;
         }
 
         public void Back()
         {
-            MW.Login();
+            MV.VisibleLoad = 100;
+            MV.Login();
         }
     }
 }

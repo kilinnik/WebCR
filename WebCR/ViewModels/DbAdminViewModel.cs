@@ -20,13 +20,6 @@ namespace WebCR.ViewModels
             private set => this.RaiseAndSetIfChanged(ref mv, value);
         }
 
-        private int visibleLoad;
-        public int VisibleLoad
-        {
-            get => visibleLoad;
-            set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
-        }
-
         //Изменение данных о пользователях
 
         ObservableCollection<DataLogin> dataLogins = new();
@@ -80,29 +73,29 @@ namespace WebCR.ViewModels
 
         public async void UpdateUsers()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             foreach (var dataLogin in DataLogins)
             {
                 await AsyncUpdate($"https://localhost:7242/api/Login/Update/{dataLogin.Id}", dataLogin);
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void DeleteUser()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncDelete<DataLogin>($"https://localhost:7242/api/Login/Delete/{Id}");
             DataLogins.Remove(DataLogins.First(x => x.Id == Id));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void AddUser()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var dataLogins = await AsyncGetAll<DataLogin>("https://localhost:7242/api/Login/GetAll");
             await AsyncAdd("https://localhost:7242/api/Login/Add", (new DataLogin(dataLogins.Last().Id + 1, Login, Password, SelectedRole, IdPatientOrDoctor)));
             DataLogins.Add(new DataLogin(dataLogins.Last().Id + 1, Login, Password, SelectedRole, IdPatientOrDoctor));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         //Препараты
@@ -130,29 +123,29 @@ namespace WebCR.ViewModels
 
         public async void UpdatePreparations()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             foreach (var preparation in Preparations)
             {
                 await AsyncUpdate($"https://localhost:7242/api/Preparations/Update/{preparation.Id}", preparation);
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void DeletePreparation()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncDelete<Timetable>($"https://localhost:7242/api/Preparation/Delete/{PreparationNumber}");
             Preparations.Remove(Preparations.First(x => x.Id == PreparationNumber));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void AddPreparation()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var preparations = await AsyncGetAll<Preparation>("https://localhost:7242/api/Preparation/GetAll");
             await AsyncAdd("https://localhost:7242/api/Preparation/Add", (new Preparation(preparations.Last().Id + 1, PreparationName)));
             Preparations.Add(new Preparation(preparations.Last().Id + 1, PreparationName));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         //Диагнозы
@@ -187,51 +180,52 @@ namespace WebCR.ViewModels
 
         public async void UpdateDiagnosises()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             foreach (var diagnosis in Diagnosises)
             {
                 await AsyncUpdate($"https://localhost:7242/api/Diagnosis/Update/{diagnosis.Id}", diagnosis);
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void DeleteDiagnosis()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncDelete<Diagnosis>($"https://localhost:7242/api/Diagnosis/Delete/{DiagnosisNumber}");
             Diagnosises.Remove(Diagnosises.First(x => x.Id == DiagnosisNumber));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void AddDiagnosis()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var diagnosises = await AsyncGetAll<Diagnosis>("https://localhost:7242/api/Diagnosis/GetAll");
             await AsyncAdd("https://localhost:7242/api/Diagnosis/Add", (new Diagnosis(diagnosises.Last().Id + 1, DiagnosisName, PreparationCode)));
             Diagnosises.Add(new Diagnosis(diagnosises.Last().Id + 1, DiagnosisName, PreparationCode));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public DbAdminViewModel(MainViewModel mv)
         {
-            MV = mv;
+            MV = mv; MV.VisibleLoad = 0;
             Initialize();
         }
 
         async void Initialize()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var dataLogins = await AsyncGetAll<DataLogin>("https://localhost:7242/api/Login/GetAll");
             var diagnosises = await AsyncGetAll<Diagnosis>("https://localhost:7242/api/Diagnosis/GetAll");
             var preparations = await AsyncGetAll<Preparation>("https://localhost:7242/api/Preparation/GetAll");
             foreach (var dataLogin in dataLogins) DataLogins.Add(dataLogin);
             foreach (var preparation in preparations) Preparations.Add(preparation);
             foreach (var diagnosis in diagnosises) Diagnosises.Add(diagnosis);
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public void Logout()
         {
+            MV.VisibleLoad = 100;
             MV.Login();
         }
     }

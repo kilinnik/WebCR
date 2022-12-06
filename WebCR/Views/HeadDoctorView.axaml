@@ -2,14 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:dialogHost="clr-namespace:DialogHost;assembly=DialogHost.Avalonia"
 			 xmlns:p1="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
 			 xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
 			 xmlns:material="using:Material.Icons.Avalonia"
 			 mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="700"
              x:Class="WebCR.Views.HeadDoctorView">
 	<Panel>
-		<ProgressBar Margin="10" Opacity="{Binding VisibleLoad}" Classes="circular" IsIndeterminate="True" />
 		<StackPanel Orientation="Horizontal">
 			<TabControl SelectedIndex="0" Margin="5" TabStripPlacement="Left">
 				<!--Добавить-->

@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
     <TrimmerRootDescriptor Include="Roots.xml" />
   </ItemGroup>
 

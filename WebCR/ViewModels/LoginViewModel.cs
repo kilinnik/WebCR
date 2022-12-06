@@ -1,11 +1,8 @@
 ﻿using Avalonia;
 using ReactiveUI;
-using System.Collections.Generic;
 using Material.Styles.Themes;
 using Material.Styles.Themes.Base;
 using System.Linq;
-using Newtonsoft.Json;
-using System.Net.Http;
 using WebCR.Models;
 
 namespace WebCR.ViewModels
@@ -50,16 +47,9 @@ namespace WebCR.ViewModels
             isDark= !isDark;
         }
 
-        private int visibleLoad;
-        public int VisibleLoad
-        {
-            get => visibleLoad;
-            set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
-        }
-
         public async void CheckLogin()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var dataLogins = await AsyncGetAll<DataLogin>("https://localhost:7242/api/Login/GetAll");
             var login = dataLogins.FirstOrDefault(x => x.Login == Login && x.Password == Password);
             if (login != null)
@@ -72,17 +62,17 @@ namespace WebCR.ViewModels
                 if (login.Role == "Пациент") MV.Patient(login.IdPatientOrDoctor);
             }
             else ShowMesWrongData = 100;
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public LoginViewModel(MainViewModel mw)
         {
-            isDark = MaterialThemeStyles.BaseTheme == BaseThemeMode.Dark; MV = mw;
+            isDark = MaterialThemeStyles.BaseTheme == BaseThemeMode.Dark; MV = mw; MV.VisibleLoad = 0;
         }
 
         public void Registration() //view регистрации
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             MV.Registration();
         }
     }

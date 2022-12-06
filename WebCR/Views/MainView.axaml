@@ -4,9 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:WebCR.ViewModels"
              mc:Ignorable="d"  d:DesignWidth="1100"  d:DesignHeight="700"
-             x:Class="WebCR.Views.MainView"
-			 Content="{Binding Content}">
+             x:Class="WebCR.Views.MainView">
   <Design.DataContext>
     <viewModels:MainViewModel />
   </Design.DataContext>
+	<Panel>
+		<ProgressBar Margin="10" Opacity="{Binding VisibleLoad}" Classes="circular" IsIndeterminate="True" />
+		<ContentControl Content="{Binding Content}"></ContentControl>
+	</Panel>
 </UserControl>

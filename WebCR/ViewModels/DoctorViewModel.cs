@@ -24,13 +24,6 @@ namespace WebCR.ViewModels
             private set => this.RaiseAndSetIfChanged(ref mv, value);
         }
 
-        private int visibleLoad;
-        public int VisibleLoad
-        {
-            get => visibleLoad;
-            set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
-        }
-
         string? selectedVisitDate;
         public string? SelectedVisitDate
         {
@@ -38,7 +31,7 @@ namespace WebCR.ViewModels
             set => this.RaiseAndSetIfChanged(ref selectedVisitDate, value);
         }
 
-        ObservableCollection<string> listVisitDate = new ObservableCollection<string>(); //список приёмов
+        ObservableCollection<string> listVisitDate = new(); //список приёмов
         public ObservableCollection<string> ListVisitDate
         {
             get => listVisitDate;
@@ -52,7 +45,7 @@ namespace WebCR.ViewModels
             set => this.RaiseAndSetIfChanged(ref showPatient, value);
         }
 
-        ObservableCollection<string> diagnosises = new ObservableCollection<string>();
+        ObservableCollection<string> diagnosises = new();
         public ObservableCollection<string> Diagnosises
         {
             get => diagnosises;
@@ -66,7 +59,7 @@ namespace WebCR.ViewModels
             set => this.RaiseAndSetIfChanged(ref selectedDiagnosis, value);
         }
 
-        ObservableCollection<string> preparations = new ObservableCollection<string>();
+        ObservableCollection<string> preparations = new();
         public ObservableCollection<string> Preparations
         {
             get => preparations;
@@ -110,7 +103,7 @@ namespace WebCR.ViewModels
 
         public async void FillInfo(string date)
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             if (date != null)
             {
                 var visits = await AsyncGetAll<Visit>("https://localhost:7242/api/Visit/GetAll");
@@ -134,7 +127,7 @@ namespace WebCR.ViewModels
                     {
                         survey += s.SurveyName + ",";
                     }
-                    survey = survey.Substring(0, survey.Length - 1);
+                    survey = survey[..^1];
                 }
                 Survey = survey;
                 var sickLeave = "нет";
@@ -178,12 +171,12 @@ namespace WebCR.ViewModels
                 }
                 ShowPatient = true;
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void SavePatientData()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var visits = await AsyncGetAll<Visit>("https://localhost:7242/api/Visit/GetAll");
             var complaints = await AsyncGetAll<Complaints>("https://localhost:7242/api/Complaints/GetAll");
             var diagnosises = await AsyncGetAll<Diagnosis>("https://localhost:7242/api/Diagnosis/GetAll");
@@ -200,25 +193,28 @@ namespace WebCR.ViewModels
                 await AsyncUpdate($"https://localhost:7242/api/Complaints/Update/{complaint.Id}", complaint);
                 await AsyncUpdate($"https://localhost:7242/api/Diagnosis/Update/{diagnosis.Id}", diagnosis);
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public DoctorViewModel(int? id, MainViewModel mv)
         {
-            ID = id; MV = mv;
+            ID = id; MV = mv; MV.VisibleLoad = 0;
             Initialize();
             this.WhenAnyValue(x => x.SelectedVisitDate).Subscribe(FillInfo!);
         }
 
         async void Initialize()
         {
+            MV.VisibleLoad = 100;
             var visits = await AsyncGetAll<Visit>("https://localhost:7242/api/Visit/GetAll");
             var visitDates = visits.Where(x => x.DoctorId == ID).OrderBy(z => z.VisitDate).Select(y => y.VisitDate);
             foreach (var date in visitDates) ListVisitDate.Add(date.ToString("dd/MM/yyyy HH:mm"));
+            MV.VisibleLoad = 0;
         }
 
         public void Logout()
         {
+            MV.VisibleLoad = 100;
             MV.Login();
         }
 
@@ -257,7 +253,7 @@ namespace WebCR.ViewModels
             set => this.RaiseAndSetIfChanged(ref sickLeaveButtonText, value);
         }
 
-        ObservableCollection<string> surveyList = new ObservableCollection<string>();
+        ObservableCollection<string> surveyList = new();
         public ObservableCollection<string> SurveyList
         {
             get => surveyList;
@@ -287,7 +283,7 @@ namespace WebCR.ViewModels
 
         public async void SurveyButton()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var surveys = await AsyncGetAll<Survey>("https://localhost:7242/api/Survey/GetAll");
             var visits = await AsyncGetAll<Visit>("https://localhost:7242/api/Visit/GetAll");
             if (SurveyButtonText == "Назначить обследование")
@@ -320,13 +316,13 @@ namespace WebCR.ViewModels
                     survey = survey[..^1];
                 }
                 Survey = survey;
-                VisibleLoad = 0;
             }
+            MV.VisibleLoad = 0;
         }
 
         public async void SickLeaveButton()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             if (SickLeaveButtonText == "Создать больничный лист")
             {
                 ShowSickLeave = true;
@@ -345,7 +341,7 @@ namespace WebCR.ViewModels
                 AsyncAdd("https://localhost:7242/api/SickLeave/Add", patientSickLeave);
                 ShowSickLeave = false;
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
     }
 }

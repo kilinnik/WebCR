@@ -15,13 +15,6 @@ namespace WebCR.ViewModels
             private set => this.RaiseAndSetIfChanged(ref mv, value);
         }
 
-        private int visibleLoad;
-        public int VisibleLoad
-        {
-            get => visibleLoad;
-            set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
-        }
-
         //Расписание
 
         public ObservableCollection<Timetable> timetables = new();
@@ -75,30 +68,30 @@ namespace WebCR.ViewModels
 
         public async void UpdateTimetables()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             foreach (var timetable in Timetables)
             {
                 await AsyncUpdate($"https://localhost:7242/api/Timetable/Update/{timetable.Id}", timetable);
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void DeleteTimetable()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncDelete<Timetable>($"https://localhost:7242/api/Timetable/Delete/{DoctorId}");
             Timetables.Remove(Timetables.First(x => x.Id == DoctorId));
             DoctorIds.Add(DoctorId);
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public async void AddTimetable()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncAdd("https://localhost:7242/api/Timetable/Add", (new Timetable(SelectedDoctorId, Days, Hours, NumberOffice)));
             Timetables.Add(new Timetable(SelectedDoctorId, Days, Hours, NumberOffice));
             DoctorIds.Remove(DoctorIds.First(x => x == SelectedDoctorId));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         //Больничные листы
@@ -112,7 +105,7 @@ namespace WebCR.ViewModels
 
         public async void UpdateStatuses()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             foreach (var sickLeave in SickLeaves)
             {
                 if (sickLeave.Status == "открыт" && sickLeave.Open < DateTime.Now)
@@ -124,7 +117,7 @@ namespace WebCR.ViewModels
             SickLeaves.Clear();
             var sickLeaves = await AsyncGetAll<SickLeave>("https://localhost:7242/api/SickLeave/GetAll");
             foreach (var sickLeave in sickLeaves) SickLeaves.Add(sickLeave);
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         //Приёмы
@@ -145,10 +138,10 @@ namespace WebCR.ViewModels
 
         public async void DeleteVisit()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncDelete<Visit>($"https://localhost:7242/api/Visit/Delete/{NumberVisit}");
             Visits.Remove(Visits.First(x => x.Id == NumberVisit));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         //Пациенты
@@ -169,20 +162,20 @@ namespace WebCR.ViewModels
 
         public async void DeletePatient()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncDelete<Patient>($"https://localhost:7242/api/Patient/Delete/{NumberCard}");
             Patients.Remove(Patients.First(x => x.Id == NumberCard));
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public DataAdminViewModel(MainViewModel mv)
         {
-            MV = mv;
+            MV = mv; MV.VisibleLoad = 0;
             Initialize();
         }
         async void Initialize()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var timetables = await AsyncGetAll<Timetable>("https://localhost:7242/api/Timetable/GetAll");
             var sickLeaves = await AsyncGetAll<SickLeave>("https://localhost:7242/api/SickLeave/GetAll");
             var visits = await AsyncGetAll<Visit>("https://localhost:7242/api/Visit/GetAll");
@@ -194,11 +187,12 @@ namespace WebCR.ViewModels
             foreach (var sickLeave in sickLeaves) SickLeaves.Add(sickLeave);
             foreach (var visit in visits) Visits.Add(visit);
             foreach (var patient in patients) Patients.Add(patient);
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public void Logout()
         {
+            MV.VisibleLoad = 100;
             MV.Login();
         }
     }

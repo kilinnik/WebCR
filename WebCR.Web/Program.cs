@@ -8,7 +8,7 @@ using WebCR;
 
 internal partial class Program
 {
-    private static void Main(string[] args) => BuildAvaloniaApp()
+    private static void Main() => BuildAvaloniaApp()
         .UseReactiveUI()
         .SetupBrowserApp("out");
 

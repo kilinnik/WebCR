@@ -19,13 +19,6 @@ namespace WebCR.ViewModels
             private set => this.RaiseAndSetIfChanged(ref mv, value);
         }
 
-        private int visibleLoad;
-        public int VisibleLoad
-        {
-            get => visibleLoad;
-            set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
-        }
-
         public ObservableCollection<Doctor> SearchResults { get; } = new();
 
         private string? _searchText;
@@ -51,16 +44,16 @@ namespace WebCR.ViewModels
 
         public async void DeleteDoctor()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             await AsyncDelete<Timetable>($"https://localhost:7242/api/Timetable/Delete/{SearchResults.Last().Id}");
             await AsyncDelete<Timetable>($"https://localhost:7242/api/Doctor/Delete/{SearchResults.Last().Id}");
             SearchResults.Clear();
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         private async void DoSearch(string s)
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             SearchResults.Clear();
             var doctors = await AsyncGetAll<Doctor>("https://localhost:7242/api/Doctor/GetAll");
             foreach (var doctor in doctors)
@@ -75,16 +68,18 @@ namespace WebCR.ViewModels
             if (s == "") ShowTimetable = false;
             if (SearchResults.Count == 1) ShowDeleteButton = true;
             else ShowDeleteButton = false;
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
+
         public HeadDoctorViewModel(MainViewModel mv)
         {
-            MV = mv;
+            MV = mv; MV.VisibleLoad = 0;
             this.WhenAnyValue(x => x.SearchText).Subscribe(DoSearch!);
         }
 
         public void Logout()
         {
+            MV.VisibleLoad = 100;
             MV.Login();
         }
 
@@ -160,10 +155,12 @@ namespace WebCR.ViewModels
 
         public async void AddDoctorButton()
         {
+            MV.VisibleLoad = 100;
             var doctors = await AsyncGetAll<Doctor>("https://localhost:7242/api/Doctor/GetAll");
             var id = doctors.Last().Id + 1;
             await AsyncAdd("https://localhost:7242/api/Doctor/Add", new Doctor(id, Surname, Name, Patronymic, DateTime.Parse(HireDate), Seniority, Adress, Speciality, AreaNumber, Phone));
             SuccessAddDoctor = true;
+            MV.VisibleLoad = 0;
         }
     }
 }

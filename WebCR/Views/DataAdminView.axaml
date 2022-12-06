@@ -8,7 +8,6 @@
 			 mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="700"
              x:Class="WebCR.Views.DataAdminView">
 	<Panel>
-		<ProgressBar Margin="10" Opacity="{Binding VisibleLoad}" Classes="circular" IsIndeterminate="True" />
 		<StackPanel>
 			<TabControl SelectedIndex="0">
 				<!--Расписание-->

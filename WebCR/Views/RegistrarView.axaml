@@ -13,7 +13,6 @@
 		</Style>
 	</UserControl.Styles>
 	<Panel>
-		<ProgressBar Margin="10" Opacity="{Binding VisibleLoad}" Classes="circular" IsIndeterminate="True" />
 		<TabControl SelectedIndex="0" Margin="5">
 			<!--Добавить пациента-->
 			<TabItem Header="Добавить пациента">

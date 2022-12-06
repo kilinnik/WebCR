@@ -13,8 +13,7 @@
 		<Button Command="{Binding ChangeTheme}" Background="CornflowerBlue" HorizontalAlignment="Right" VerticalAlignment="Top">
 			<material:MaterialIcon Kind="ThemeLightDark"></material:MaterialIcon>
 		</Button>
-		<StackPanel Width="300" MaxWidth="300" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-			<ProgressBar Margin="10" Opacity="{Binding VisibleLoad}" Classes="circular" IsIndeterminate="True" />			
+		<StackPanel Width="300" MaxWidth="300" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center">		
 			<TextBlock HorizontalAlignment="Center" Opacity="{Binding ShowMesWrongData}" Foreground="Red" Text="Неправильный логин или пароль"/>
 			<controls:Card>
 					<TextBlock FontSize="20" HorizontalAlignment="Center" Classes="Headline6" Text="Авторизация" />

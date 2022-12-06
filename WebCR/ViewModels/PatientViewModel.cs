@@ -1,13 +1,9 @@
-﻿using Newtonsoft.Json;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebCR.Models;
 
 namespace WebCR.ViewModels
@@ -19,13 +15,6 @@ namespace WebCR.ViewModels
         {
             get => mw;
             private set => this.RaiseAndSetIfChanged(ref mw, value);
-        }
-
-        private int visibleLoad;
-        public int VisibleLoad
-        {
-            get => visibleLoad;
-            set => this.RaiseAndSetIfChanged(ref visibleLoad, value);
         }
 
         int? CardNumber { get; set; } //номер карты текущего пациента
@@ -179,7 +168,7 @@ namespace WebCR.ViewModels
 
         public async void CheckData()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             ChooseVisible = false; VisibleCard = true;
             var doctors = await AsyncGetAll<Doctor>("https://localhost:7242/api/Doctor/GetAll");
             var patients = await AsyncGetAll<Patient>("https://localhost:7242/api/Patient/GetAll");
@@ -240,10 +229,10 @@ namespace WebCR.ViewModels
             {
                 TextAppointmentVisible = true; TextAppointment = "В это время врач не принимает";
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
-        public bool CheckTime(Timetable timetable, int hours)
+        public static bool CheckTime(Timetable timetable, int hours)
         {
             bool result = false;
             var time = timetable.VisitHours.Split(",");
@@ -257,7 +246,7 @@ namespace WebCR.ViewModels
 
         public async void Accept()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var visits = await AsyncGetAll<Visit>("https://localhost:7242/api/Visit/GetAll");
             var doctors = await AsyncGetAll<Doctor>("https://localhost:7242/api/Doctor/GetAll");
             var patients = await AsyncGetAll<Patient>("https://localhost:7242/api/Patient/GetAll");
@@ -271,7 +260,7 @@ namespace WebCR.ViewModels
             await AsyncAdd("https://localhost:7242/api/Visit/Add", patientVisit);
             await AsyncAdd("https://localhost:7242/api/Complaints/Add", patientComplaint);
             FillGrid();
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public void ChangeData()
@@ -371,6 +360,7 @@ namespace WebCR.ViewModels
 
         public async void FillGrid()
         {
+            MV.VisibleLoad = 100;
             var visits =await AsyncGetAll<Visit>("https://localhost:7242/api/Visit/GetAll");
             var doctors = await AsyncGetAll<Doctor>("https://localhost:7242/api/Doctor/GetAll");
             var timetables = await AsyncGetAll<Timetable>("https://localhost:7242/api/Timetable/GetAll");
@@ -380,14 +370,15 @@ namespace WebCR.ViewModels
             {
                 var doctor = doctors.First(x => x.Id == patinetVisit.DoctorId);
                 string name = $"{doctor.Surname} {doctor.Name[0]}.{doctor.Patronymic[0]}.";
-                dataVisit.Add(new DataVisit() { DateTime = patinetVisit.VisitDate.ToString("dd/MM/yyyy HH:mm"), Speciality = doctor.Speciality, Name = name, Office = (int)timetables.First(x => x.Id == doctor.Id).OfficeNumber });
+                dataVisit.Add(new DataVisit() { DateTime = patinetVisit.VisitDate.ToString("dd/MM/yyyy HH:mm"), Speciality = doctor.Speciality, Name = name, Office = timetables.First(x => x.Id == doctor.Id).OfficeNumber });
             }
             DataVisits = new ObservableCollection<DataVisit>(dataVisit);
+            MV.VisibleLoad = 0;
         }
 
         public async void ButtonChangeUserData()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var patients = await AsyncGetAll<Patient>("https://localhost:7242/api/Patient/GetAll");
             var dataLogins = await AsyncGetAll<DataLogin>("https://localhost:7242/api/Login/GetAll");
             if (TextButtonChangeUserData == "Изменить данные")
@@ -402,7 +393,7 @@ namespace WebCR.ViewModels
                 await AsyncUpdate($"https://localhost:7242/api/Patient/Update/{patient.Id}", patient);
                 await AsyncUpdate($"https://localhost:7242/api/Login/Update/{user.Id}", user);
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         //Расписание врачей
@@ -424,7 +415,7 @@ namespace WebCR.ViewModels
 
         private async void DoSearch(string s)
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var doctors = await AsyncGetAll<Doctor>("https://localhost:7242/api/Doctor/GetAll");
             var patients = await AsyncGetAll<Patient>("https://localhost:7242/api/Patient/GetAll");
             var timetables = await AsyncGetAll<Timetable>("https://localhost:7242/api/Timetable/GetAll");
@@ -436,42 +427,39 @@ namespace WebCR.ViewModels
                 var timetable = timetables.FirstOrDefault(x => x.Id == doctor.Id);
                 if (timetable != null && s != null && (timetable.OfficeNumber.ToString().Contains(s) || name.ToLower().Contains(s.ToLower())))
                 {
-                    SearchResults.Add(new TimetableDoctors() { Name = name, Speciality = doctor.Speciality, Office = (int)timetable.OfficeNumber, Days = timetable.VisitDays, Time = timetable.VisitHours });
+                    SearchResults.Add(new TimetableDoctors() { Name = name, Speciality = doctor.Speciality, Office = timetable.OfficeNumber, Days = timetable.VisitDays, Time = timetable.VisitHours });
                     ShowTimetable = true;
                 }
                 if (s == "") ShowTimetable = false;
             }
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public PatientViewModel(int? cardNumber, MainViewModel mv)
         {
-            MV = mv; CardNumber = cardNumber; LabelSpeciality = "Специальность врача"; OnButton = true; LabelVisitDate = "Дата приёма"; Icon = "ToggleSwitchOffOutline"; EnabledHours = true; VisibleHours = true; Hours = 0; Minutes = 0; TextTime = "Время приёма";
-
+            MV = mv; CardNumber = cardNumber; LabelSpeciality = "Специальность врача"; LabelVisitDate = "Дата приёма"; Icon = "ToggleSwitchOffOutline"; TextTime = "Время приёма";
+            OnButton = true; EnabledHours = true; VisibleHours = true; Hours = 0; Minutes = 0; MV.VisibleLoad = 0;
             Initialize();
-
             this.WhenAnyValue(x => x.SearchText).Subscribe(DoSearch!);
         }
 
         async void Initialize()
         {
-            VisibleLoad = 100;
+            MV.VisibleLoad = 100;
             var doctors = await AsyncGetAll<Doctor>("https://localhost:7242/api/Doctor/GetAll");
             var patients = await AsyncGetAll<Patient>("https://localhost:7242/api/Patient/GetAll");
             var dataLogins = await AsyncGetAll<DataLogin>("https://localhost:7242/api/Login/GetAll");
-
             var listSpecialities = doctors.Where(x => x.AreaNumber == patients.First(y => y.Id == CardNumber).AreaNumber).Select(x => x.Speciality);
             foreach (var item in listSpecialities) Specialities.Add(item);
-
             var patient = patients.First(y => y.Id == CardNumber); var user = dataLogins.First(x => x.IdPatientOrDoctor == CardNumber && x.Role == "Пациент"); TextButtonChangeUserData = "Изменить данные";
             Surname = patient.Surname; Name = patient.Name; Patronymic = patient.Patronymic; Phone = patient.Phone; DateOfBirthday = patient.DateOfBirth.ToString("dd/MM/yyyy"); Adress = patient.Adress; Login = user.Login; Password = user.Password;
             FillGrid();
-
-            VisibleLoad = 0;
+            MV.VisibleLoad = 0;
         }
 
         public void Logout()
         {
+            MV.VisibleLoad = 100;
             MV.Login();
         }
     }
