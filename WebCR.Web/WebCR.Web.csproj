@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <WasmExtraFilesToDeploy Remove="AppBundle\favicon1.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Avalonia.Web" Version="$(AvaloniaVersion)" />
   </ItemGroup>
 
