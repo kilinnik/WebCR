@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <WasmExtraFilesToDeploy Remove="AppBundle\favicon1.ico" />
+    <WasmExtraFilesToDeploy Remove="AppBundle\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
